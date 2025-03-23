@@ -1,0 +1,40 @@
+.layoutContainer {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.layoutContainer :global(.card) {
+  background-color: #2a2a2a;
+  border: none;
+  color: #ffffff;
+}
+
+.layoutContainer :global(.card .card-title) {
+  color: #ffffff;
+}
+
+.layoutContainer :global(.card .card-text) {
+  color: #d1d1d1;
+}
+
+.layoutContainer :global(.btn-outline-primary) {
+  color: #7eb9ff;
+  border-color: #7eb9ff;
+}
+
+.layoutContainer :global(.btn-outline-primary:hover) {
+  background-color: #7eb9ff;
+  color: #1a1a1a;
+}
+
+.layoutContainer :global(.text-muted) {
+  color: #b0b0b0 !important;
+}
+
+.layoutContainer :global(.section-title) {
+  color: #ffffff !important;
+}
+
+.layoutContainer :global(.section-title::after) {
+  background: linear-gradient(to right, #7eb9ff, #c850c0);
+} 
