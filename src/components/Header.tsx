@@ -34,6 +34,12 @@ const Header = () => {
               to="/blog"
               data-text="블로그"
             >블로그</Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              className={`me-4 ${isActive('/chat')}`} 
+              to="/chat"
+              data-text="채팅"
+            >채팅</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

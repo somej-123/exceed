@@ -1,0 +1,83 @@
+.chatCard {
+  height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+.chatBody {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+
+.chatMessage {
+  margin-bottom: 1rem;
+}
+
+.messageContent {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+}
+
+.messageIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.messageText {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 1rem;
+  max-width: 80%;
+  position: relative;
+  color: #212529;
+}
+
+.messageText pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+.userMessage .messageContent {
+  flex-direction: row-reverse;
+}
+
+.userMessage .messageText {
+  background: #e3f2fd;
+  color: #212529;
+}
+
+.messageTime {
+  display: block;
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+
+/* 스크롤바 스타일링 */
+.chatBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatBody::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.chatBody::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+} 
