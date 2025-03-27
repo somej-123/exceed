@@ -80,4 +80,57 @@
 .chatBody::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 3px;
-} 
+}
+
+.chatInput {
+  resize: none;
+  height: 46px;
+  min-height: 46px;
+  max-height: 46px;
+  overflow-y: auto;
+  border-radius: 23px;
+  padding: 12px 20px;
+  line-height: 1.5;
+  font-size: 14px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  background-color: #fff;
+  margin-right: 0.5rem;
+  width: 100%;
+}
+
+.sendButton {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.modelInfo {
+  font-size: 14px;
+  opacity: 0.9;
+}

@@ -1,12 +1,30 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { BsSend, BsRobot, BsPerson } from 'react-icons/bs';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from '../styles/Chat.module.css';
 import { useChatStore } from '../store/chatStore';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');
-  const { messages, isLoading, error, sendMessage, getModelList } = useChatStore();
+  const { messages, isLoading, error, sendMessage, getModelList, currentModel } = useChatStore();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // textarea 높이 자동 조절
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 150)}px`;
+    }
+  };
+
+  useEffect(()=>{
+    getModelList();
+  },[])
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [inputMessage]);
 
   const handleSendMessage = async () => {
     if (inputMessage.trim() === '') return;
@@ -28,9 +46,15 @@ const Chat = () => {
         <Col md={8} lg={6}>
           <Card className={`${styles.chatCard} border-0 shadow-sm`}>
             <Card.Header className="bg-primary text-white py-3">
-              <div className="d-flex align-items-center">
-                <BsRobot className="me-2" size={24} />
-                <h5 className="mb-0">AI 어시스턴트</h5>
+              <div className={styles.headerContainer}>
+                <div className={styles.headerLeft}>
+                  <BsRobot className={`me-2`}size={24}
+                  />
+                  <h5 className="mb-0">AI 어시스턴트</h5>
+                </div>
+                <div className={styles.modelInfo}>
+                  {currentModel ? `현재 모델: ${currentModel.id}` : '모델을 선택해주세요'}
+                </div>
               </div>
             </Card.Header>
 
@@ -68,22 +92,22 @@ const Chat = () => {
             </Card.Body>
 
             <Card.Footer className="bg-white border-0 p-3">
-              <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
+              <Form className={styles.inputContainer} onSubmit={(e) => e.preventDefault()}>
                 <Form.Control
-                  type="text"
-                  placeholder="메시지를 입력하세요..."
+                  ref={textareaRef}
+                  as="textarea"
+                  placeholder="메시지를 입력하세요... (Shift + Enter로 줄바꿈)"
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   disabled={isLoading}
-                  className="me-2 rounded-pill"
+                  className={styles.chatInput}
                 />
                 <Button 
                   onClick={handleSendMessage}
                   disabled={isLoading}
                   variant="primary" 
-                  className="rounded-circle d-flex align-items-center justify-content-center"
-                  style={{ width: '46px', height: '46px' }}
+                  className={styles.sendButton}
                 >
                   <BsSend />
                 </Button>
@@ -92,12 +116,7 @@ const Chat = () => {
           </Card>
         </Col>
       </Row>
-      <Button onClick={()=>{
-        getModelList();
-        // alert(`현재 모델은 ${modelList.id}입니다.`);
-      }}>
-        <BsRobot size={20} />
-      </Button>
+
     </Container>
   );
 };

@@ -1,124 +1,92 @@
-# Exceed Project
+# AI Chat Assistant Project
 
-React + TypeScript + Vite 기반의 프로젝트입니다.
+## 프로젝트 개요
+React와 TypeScript를 사용한 AI 채팅 애플리케이션입니다. LM Studio API를 활용하여 로컬에서 AI 모델과 대화할 수 있습니다.
 
-## 시작하기
+## 주요 기능
+### 1. 채팅 인터페이스
+- 사용자/AI 메시지 구분 표시
+- 메시지 타임스탴프 표시
+- 로딩 상태 표시
+- 에러 메시지 처리
+- 자동 줄바꿈 및 들여쓰기 지원
+- 채팅 히스토리 유지
 
-### 사전 요구사항
-- Node.js 18.0.0 이상
-- Yarn 패키지 매니저
+### 2. 입력 기능
+- Textarea를 통한 멀티라인 입력 지원
+- Shift + Enter로 줄바꿈
+- Enter로 메시지 전송
+- 입력창 자동 높이 조절
 
-### 설치 및 실행
+### 3. AI 모델 관리
+- 현재 선택된 모델 표시
+- 모델 목록 조회 기능
+- 모델 선택 기능
 
-1. 의존성 설치
+### 4. 상태 관리
+- Zustand를 사용한 전역 상태 관리
+- Immer를 통한 불변성 관리
+- TypeScript를 통한 타입 안전성
+
+## 기술 스택
+- React
+- TypeScript
+- React-Bootstrap
+- Zustand (상태 관리)
+- Immer (불변성 관리)
+- Axios (API 통신)
+- SweetAlert2 (알림)
+
+## 주요 컴포넌트
+### Chat.tsx
+- 메인 채팅 인터페이스
+- 메시지 입력 및 표시
+- 모델 정보 표시
+
+### chatStore.ts
+- 채팅 관련 상태 관리
+- API 통신 처리
+- 메시지 히스토리 관리
+
+## 스타일링
+- CSS 모듈을 사용한 스타일 관리
+- 반응형 디자인
+- 사용자 친화적인 UI/UX
+- 커스텀 스크롤바
+
+## API 통신
+- LM Studio API 연동
+- REST API 호출
+- 에러 처리
+- CORS 설정
+
+## 설치 및 실행
 ```bash
+# 패키지 설치
 yarn install
-```
 
-2. 개발 서버 실행
-```bash
+# 개발 서버 실행
 yarn dev
 ```
 
-3. 프로덕션 빌드
-```bash
-yarn build
-```
+## 업데이트 내역 (2024-02-27)
+1. 채팅 인터페이스 개선
+   - textarea 높이 조절 기능 추가
+   - 전송 버튼 디자인 개선
+   - 헤더에 현재 모델 정보 표시
 
-4. 빌드 결과물 미리보기
-```bash
-yarn preview
-```
+2. 상태 관리 개선
+   - Immer 도입
+   - 타입 안전성 강화
+   - 채팅 히스토리 관리 기능
 
-## 패키지 관리
+3. 스타일링 개선
+   - CSS 모듈 구조화
+   - 반응형 디자인 적용
+   - UI 일관성 향상
 
-이 프로젝트는 Yarn을 패키지 매니저로 사용합니다. npm 대신 yarn 명령어를 사용해주세요.
-
-```bash
-# 새 패키지 설치
-yarn add [패키지명]
-
-# 개발 의존성으로 패키지 설치
-yarn add -D [패키지명]
-
-# 패키지 제거
-yarn remove [패키지명]
-
-# 모든 의존성 업데이트
-yarn upgrade
-```
-
-## 프로젝트 구조
-
-```
-src/
-  ├── components/     # 재사용 가능한 컴포넌트
-  ├── pages/         # 페이지 컴포넌트
-  ├── assets/        # 이미지, 폰트 등 정적 파일
-  ├── App.tsx        # 메인 앱 컴포넌트
-  └── main.tsx       # 앱 진입점
-```
-
-## 기술 스택
-
-- React 19
-- TypeScript
-- Vite
-- React Router DOM
-- React Bootstrap
-- Bootstrap 5
-
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 향후 계획
+- [ ] 다크 모드 지원
+- [ ] 채팅 히스토리 저장 기능
+- [ ] 모델 설정 커스터마이징
+- [ ] 성능 최적화

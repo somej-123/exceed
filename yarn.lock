@@ -1138,12 +1138,13 @@ esutils@^2.0.2:
   dependencies:
     axios "^1.8.4"
     bootstrap "^5.3.3"
-    exceed "file:../../Users/somej/AppData/Local/Yarn/Cache/v6/npm-exceed-0.0.0-da0430d6-6963-4e15-a889-c5af83348e10-1743062357761/node_modules/exceed"
+    exceed "file:../../Users/somej/AppData/Local/Yarn/Cache/v6/npm-exceed-0.0.0-c934904d-aba6-4460-a972-c02adaff3328-1743070837224/node_modules/exceed"
     react "^19.0.0"
     react-bootstrap "^2.10.9"
     react-dom "^19.0.0"
     react-icons "^5.5.0"
     react-router-dom "^7.4.0"
+    sweetalert2 "^11.17.2"
     zustand "^5.0.3"
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
@@ -1335,6 +1336,11 @@ ignore@^5.2.0, ignore@^5.3.1:
   version "5.3.2"
   resolved "https://registry.npmjs.org/ignore/-/ignore-5.3.2.tgz"
   integrity sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==
+
+immer@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-10.1.1.tgz#206f344ea372d8ea176891545ee53ccc062db7bc"
+  integrity sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==
 
 import-fresh@^3.2.1:
   version "3.3.1"
