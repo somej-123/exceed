@@ -60,13 +60,13 @@ const Chat = () => {
 
             <Card.Body className={`${styles.chatBody} p-4`}>
               {messages.map((msg: any, index: number) => (
-                <div key={index} className={`${styles.chatMessage} ${msg.type === 'user' ? styles.userMessage : ''}`}>
+                <div key={index} className={`${styles.chatMessage} ${msg.role === 'user' ? styles.userMessage : ''}`}>
                   <div className={styles.messageContent}>
                     <div className={styles.messageIcon}>
-                      {msg.type === 'user' ? <BsPerson size={20} /> : <BsRobot size={20} />}
+                      {msg.role === 'user' ? <BsPerson size={20} /> : <BsRobot size={20} />}
                     </div>
                     <div className={styles.messageText}>
-                      <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+                      <div dangerouslySetInnerHTML={{ __html: msg.content }} />
                       <small className={styles.messageTime}>{msg.timestamp}</small>
                     </div>
                   </div>
