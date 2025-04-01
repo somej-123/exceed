@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.0",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "exceed": "file:",
@@ -17,9 +18,11 @@
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.55.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.4.0",
     "sweetalert2": "^11.17.2",
+    "yup": "^1.6.1",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
