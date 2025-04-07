@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styles from '../styles/Login.module.css';
 import { apiClient } from '../api/client';
+import { showError, showSuccess } from '../utils/swal';
 
 const schema = yup.object().shape({
   id: yup
@@ -39,6 +40,7 @@ type FormData = yup.InferType<typeof schema>;
 const Register: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -53,19 +55,43 @@ const Register: React.FC = () => {
     setError('');
 
     try {
-      // API 호출 시뮬레이션
-      console.log('회원가입 시도:', data);
-      // await new Promise(resolve => setTimeout(resolve, 1000));
       const response = await apiClient.post('/api/users/register', {
         userId: data.id,
         email: data.email,
         password: data.password
       });
-      console.log(response);
-      // 실제 회원가입 로직 구현
+      console.log("response", response);
+      console.log("response.status", response.status);
 
-    } catch {
-      setError('회원가입에 실패했습니다. 다시 시도해주세요.');
+      if (response.status === 200) {
+        showSuccess('성공', '회원가입에 성공했습니다.');
+        navigate('/login');
+      } else {
+        setError('회원가입에 실패했습니다. 다시 시도해주세요.');
+        showError('실패', '회원가입에 실패했습니다. 다시 시도해주세요.');
+      }
+
+    } catch (error: any) {
+      if (error.response) {
+        // 서버에서 응답이 왔지만 에러 상태 코드인 경우
+        console.error('서버 응답:', error.response.data);
+        console.error('상태 코드:', error.response.status);
+        console.error('헤더:', error.response.headers);
+        // 서버에서 보낸 에러 메시지가 있는 경우
+        if (error.response.data.errorMessage) {
+          setError(error.response.data.errorMessage);
+        } else {
+          setError('회원가입에 실패했습니다. 다시 시도해주세요.');
+        }
+      } else if (error.request) {
+        // 요청은 보냈지만 응답을 받지 못한 경우
+        console.error('요청 에러:', error.request);
+        setError('서버와의 통신에 실패했습니다. 네트워크 상태를 확인해주세요.');
+      } else {
+        // 요청을 보내기 전에 발생한 에러
+        console.error('에러:', error.message);
+        setError('알 수 없는 오류가 발생했습니다.');
+      }
     } finally {
       setIsLoading(false);
     }
