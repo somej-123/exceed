@@ -8,6 +8,8 @@ import Chat from './pages/Chat';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { PrivateRoute } from './components/PrivateRoute';
+import { PublicRoute } from './components/PublicRoute';
 
 function App() {
   return (
@@ -17,9 +19,21 @@ function App() {
           <Route index element={<Home />} />
           <Route path="info" element={<Info />} />
           <Route path="blog" element={<Blog />} />
-          <Route path="chat" element={<Chat />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+          <Route path="chat" element={
+            <PrivateRoute>
+              <Chat />
+            </PrivateRoute>
+          } />
+          <Route path="login" element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          } />
+          <Route path="register" element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          } />
         </Route>
       </Routes>
     </Router>

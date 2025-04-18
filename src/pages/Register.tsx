@@ -60,8 +60,8 @@ const Register: React.FC = () => {
         email: data.email,
         password: data.password
       });
-      console.log("response", response);
-      console.log("response.status", response.status);
+      // console.log("response", response);
+      // console.log("response.status", response.status);
 
       if (response.status === 200) {
         showSuccess('성공', '회원가입에 성공했습니다.');

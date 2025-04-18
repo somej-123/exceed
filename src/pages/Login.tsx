@@ -6,18 +6,16 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styles from '../styles/Login.module.css';
+import { apiClient } from 'src/api/client';
+import { useAuthStore } from 'src/store/authStore';
 
 const schema = yup.object().shape({
   id: yup
     .string()
-    .required('아이디를 입력해주세요')
-    .min(4, '아이디는 최소 4자 이상이어야 합니다')
-    .max(20, '아이디는 최대 20자까지 가능합니다'),
+    .required('아이디를 입력해주세요'),
   password: yup
     .string()
     .required('비밀번호를 입력해주세요')
-    .min(6, '비밀번호는 최소 6자 이상이어야 합니다')
-    .max(20, '비밀번호는 최대 20자까지 가능합니다'),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -25,9 +23,10 @@ type FormData = yup.InferType<typeof schema>;
 const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const login = useAuthStore((state) => state.login);
 
   const {
-    register,
+    register: loginFormYup,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
@@ -39,12 +38,15 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      // API 호출 시뮬레이션
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // 실제 로그인 로직 구현
-      console.log('로그인 시도:', data);
-    } catch {
+      const response = await apiClient.post('/api/users/login', {
+        userId: data.id,
+        password: data.password
+      });
+
+      login(response.data.token, data.id);
+    } catch (error) {
       setError('로그인에 실패했습니다. ID와 비밀번호를 확인해주세요.');
+      console.error('로그인 실패:', error);
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +70,7 @@ const Login: React.FC = () => {
                 <Form.Control
                   type="text"
                   placeholder="아이디를 입력하세요"
-                  {...register('id')}
+                  {...loginFormYup('id')}
                   className={`${styles.formControl} ${errors.id ? 'is-invalid' : ''}`}
                 />
               </div>
@@ -86,7 +88,7 @@ const Login: React.FC = () => {
                 <Form.Control
                   type="password"
                   placeholder="비밀번호를 입력하세요"
-                  {...register('password')}
+                  {...loginFormYup('password')}
                   className={`${styles.formControl} ${errors.password ? 'is-invalid' : ''}`}
                 />
               </div>

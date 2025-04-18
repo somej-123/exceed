@@ -1,9 +1,15 @@
+import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FaRocket, FaBullhorn } from 'react-icons/fa';
 import { BsLightbulb, BsBook, BsGear, BsPeople } from 'react-icons/bs';
 import '../styles/home.css';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   return (
     <>
       {/* 히어로 섹션 */}
@@ -18,6 +24,13 @@ const Home = () => {
                   variant="light" 
                   size="lg" 
                   className="me-3 ms-md-5 custom-btn"
+                  onClick={() => {
+                    if (isAuthenticated) {
+                      navigate('/chat');
+                    } else {
+                      navigate('/login');
+                    }
+                  }}
                 >
                   시작하기 
                   <span className="ms-2">→</span>

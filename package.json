@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.0",
+    "@popperjs/core": "2.11.8",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "exceed": "file:",
@@ -27,9 +29,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@types/node": "^22.13.14",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/node": "22.14.1",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
