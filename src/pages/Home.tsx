@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FaRocket, FaBullhorn } from 'react-icons/fa';
 import { BsLightbulb, BsBook, BsGear, BsPeople } from 'react-icons/bs';

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+import { showSuccess } from 'src/utils/swal';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -35,6 +36,8 @@ export const useAuthStore = create<AuthState>()(
             userId: null,
             isAuthenticated: false,
           });
+
+          showSuccess('로그아웃', '로그아웃되었습니다.');
         },
       }),
       {

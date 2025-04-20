@@ -3,28 +3,38 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from 'src/store/authStore';
 import { apiClient } from 'src/api/client';
+import { showConfirm } from 'src/utils/swal';
+import { useNavigate } from 'react-router-dom'; 
 
 const Header = () => {
   const location = useLocation();
   const { isAuthenticated, logout } = useAuthStore();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => {
     return location.pathname === path ? HeaderCss.activeLink : '';
   };
 
   const handleLogout = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      // 서버에 로그아웃 요청 (선택사항)
-      await apiClient.post('/api/users/logout');
-      logout();
-      // 추가: 성공 메시지 표시 (선택사항)
-      // toast.success('로그아웃되었습니다') 등
-    } catch (error) {
-      console.error('로그아웃 실패:', error);
-      // 실패해도 일단 로컬에서는 로그아웃 처리
-      logout();
-    }
+    //로그아웃 버튼 클릭 시 확인
+    showConfirm('로그아웃', '정말 로그아웃 하시겠습니까?').then(async (result) => {
+      if (result.isConfirmed) {
+        e.preventDefault();
+        try {
+          // 서버에 로그아웃 요청 (선택사항)
+          await apiClient.post('/api/users/logout');
+          logout();
+          
+          navigate('/login');
+          // 추가: 성공 메시지 표시 (선택사항)
+          // toast.success('로그아웃되었습니다') 등
+        } catch (error) {
+          console.error('로그아웃 실패:', error);
+            // 실패해도 일단 로컬에서는 로그아웃 처리
+            logout();
+        }
+      }
+    });
   };
 
   return (
