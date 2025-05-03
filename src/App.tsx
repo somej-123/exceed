@@ -6,6 +6,7 @@ import Blog from './pages/Blog';
 import Chat from './pages/Chat';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { PrivateRoute } from './components/PrivateRoute';
 import { PublicRoute } from './components/PublicRoute';
@@ -31,6 +32,11 @@ function App() {
           <Route path="register" element={
             <PublicRoute>
               <Register />
+            </PublicRoute>
+          } />
+          <Route path="forgot-password" element={
+            <PublicRoute>
+              <ForgotPassword />
             </PublicRoute>
           } />
         </Route>
