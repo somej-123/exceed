@@ -23,6 +23,7 @@ const MyInfoEdit = () => {
   const [initialData, setInitialData] = useState<FormData | null>(null);
   const navigate = useNavigate();
 
+  // 주석 추가 테스트
   const {
     register,
     handleSubmit,
