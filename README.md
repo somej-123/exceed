@@ -177,3 +177,56 @@ VITE_LM_STUDIO_API_URL=http://localhost:1234  # LM Studio API 엔드포인트
 - [ ] 다크 모드 지원
 - [ ] 음성 입력/출력 지원
 - [ ] 이미지 생성 AI 통합
+
+# EXCEED 프로젝트 작업 내역 (2024-06-13)
+
+## 1. JWT 인증 및 만료/로그아웃 처리
+- JWT accessToken, refreshToken을 로그인 시 localStorage에 저장
+- accessToken 만료(401/403) 시 refreshToken으로 /api/users/refresh 호출, 새 토큰으로 갱신 후 재시도
+- refreshToken도 만료/불일치 시 자동 로그아웃 및 /login 이동 처리
+- 로그아웃 시 /api/users/logout 요청 후 localStorage 및 상태 초기화
+- axios 인터셉터로 모든 요청에 accessToken 자동 포함
+- JWT 토큰 만료, 갱신, 로그아웃 등 인증/보안 실무 패턴 적용
+- 보안상 localStorage 대신 httpOnly 쿠키 사용도 고려 필요(실무 권장)
+- DB user_info 테이블에 refresh_token 컬럼 추가 필요(백엔드와 연동)
+
+## 2. 주요 API 엔드포인트 예시
+- **로그인:** POST /api/users/login  
+  요청: { "userId": "...", "password": "..." }  
+  응답: { "token": "...", "refreshToken": "...", "userId": "..." }
+- **토큰 갱신:** POST /api/users/refresh  
+  요청: { "refreshToken": "..." }  
+  응답: { "accessToken": "...", "refreshToken": "...", "userId": "..." }
+- **로그아웃:** POST /api/users/logout  
+  헤더: Authorization: Bearer {JWT_TOKEN}
+- **내 정보:** GET /api/users/me  
+  헤더: Authorization: Bearer {JWT_TOKEN}
+
+## 3. DB 연동 참고
+- user_info 테이블에 refresh_token 컬럼 추가 필요
+```sql
+ALTER TABLE public.user_info ADD COLUMN refresh_token VARCHAR(512);
+```
+
+## 4. 폴더 구조/경로 정리
+- pages, components, store, api, utils 등 폴더 구조를 실무적으로 정리
+- import 경로를 상대경로로 통일 및 linter 에러 해결
+
+## 5. 회원정보 수정/보호
+- MyInfoEdit.tsx에서 회원정보(닉네임, 이메일) 수정 폼 구현
+- yup + react-hook-form을 통한 유효성 검사 적용
+- 저장/취소/비밀번호 변경 버튼 UI 개선 및 위치 조정
+- 비밀번호 변경 버튼은 카드 하단에 전체 너비로 배치
+
+## 6. 다크모드 UI/UX 개선
+- 카드, 버튼, 리스트 등 전체적으로 다크모드에 어울리는 색상/그라데이션/그림자/애니메이션 적용
+- 반응형 레이아웃, 버튼 hover 효과, 아이콘 등 세련된 디자인 적용
+
+## 7. 실무 팁/문제 해결
+- 403/401 에러 원인 분석 및 서버 로그 미출력 시 대처법 안내
+- 크롬 확장 프로그램 등에서 발생하는 콘솔 에러(메시지 채널 closed) 안내
+- JWT 만료, refresh, 로그아웃 등 인증/보안 실무 패턴 설명
+
+---
+
+### 추가로 궁금한 점이나, 더 개선하고 싶은 부분이 있으면 언제든 문의해 주세요!
