@@ -1,9 +1,9 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FaRocket, FaBullhorn } from 'react-icons/fa';
 import { BsLightbulb, BsBook, BsGear, BsPeople } from 'react-icons/bs';
-import '../styles/home.css';
+import 'src/styles/home.css';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from 'src/store/authStore';
 
 const Home = () => {
   const navigate = useNavigate();

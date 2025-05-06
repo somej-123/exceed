@@ -1,8 +1,8 @@
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { BsSend, BsRobot, BsPerson } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
-import styles from '../styles/Chat.module.css';
-import { useChatStore } from '../store/chatStore';
+import styles from 'src/styles/Chat.module.css';
+import { useChatStore } from 'src/store/chatStore';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');

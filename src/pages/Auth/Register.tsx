@@ -5,9 +5,9 @@ import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import styles from '../styles/Login.module.css';
-import { apiClient } from '../api/client';
-import { showError, showSuccess } from '../utils/swal';
+import styles from '../../styles/Login.module.css';
+import { apiClient } from '../../api/client';
+import { showError, showSuccess } from '../../utils/swal';
 
 const schema = yup.object().shape({
   id: yup
@@ -15,11 +15,14 @@ const schema = yup.object().shape({
     .required('아이디를 입력해주세요')
     .min(4, '아이디는 최소 4자 이상이어야 합니다')
     .max(20, '아이디는 최대 20자까지 가능합니다')
-    .matches(/^[a-zA-Z0-9]+$/, '아이디는 영문자와 숫자만 사용 가능합니다'),
+    .matches(/^[a-zA-Z0-9]+$/, '아이디는 영문자와 숫자만 사용 가능합니다')
+    .matches(/^(?!somej$|admin$|test$|wkdalxpfl12$).*/i, '금지된 단어가 포함되어 있습니다.'),
   email: yup
     .string()
     .required('이메일을 입력해주세요')
-    .email('올바른 이메일 형식이 아닙니다'),
+    .email('올바른 이메일 형식이 아닙니다')
+    .matches(/^(?!somej@naver\.com$).*/i, 'somej@naver.com은 사용할 수 없는 이메일입니다.')
+    .matches(/^(?!wkdalxpfl12@gmail\.com$).*/i, 'wkdalxpfl12@gmail.com은 사용할 수 없는 이메일입니다.'),
   password: yup
     .string()
     .required('비밀번호를 입력해주세요')

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { apiClient } from '../api/client';
-import { showError } from '../utils/swal';
+import { apiClient } from 'src/api/client';
+import { showError } from 'src/utils/swal';
 import { produce } from 'immer';
 
 export const useChatStore = create<any>((set: any, get: any) => ({

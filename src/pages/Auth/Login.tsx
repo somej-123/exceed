@@ -5,9 +5,9 @@ import { FaUser, FaLock, FaGoogle, FaGithub } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import styles from '../styles/Login.module.css';
-import { apiClient } from 'src/api/client';
-import { useAuthStore } from 'src/store/authStore';
+import styles from '../../styles/Login.module.css';
+import { apiClient } from '../../api/client';
+import { useAuthStore } from '../../store/authStore';
 
 const schema = yup.object().shape({
   id: yup

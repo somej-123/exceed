@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from 'src/store/authStore';
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -8,6 +8,7 @@ interface PrivateRouteProps {
 
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  console.log(isAuthenticated);
   
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 }; 

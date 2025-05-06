@@ -1,8 +1,8 @@
 import { Container } from 'react-bootstrap';
-import Header from './Header';
-import Footer from './Footer';
+import Header from 'src/components/Header';
+import Footer from 'src/components/Footer';
 import { Outlet } from 'react-router-dom';
-import styles from '../styles/Layout.module.css';
+import styles from 'src/styles/Layout.module.css';
 
 const Layout = () => {
   return (
