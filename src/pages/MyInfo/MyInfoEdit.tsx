@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { showSuccess, showError } from 'src/utils/swal';
 
 const schema = yup.object().shape({
-  nickname: yup.string().required('닉네임을 입력해주세요').max(20, '최대 20자까지 입력 가능합니다.'),
+  nickname: yup.string().required('닉네임을 입력해주세요').max(10, '최대 10자까지 입력 가능합니다.'),
   email: yup.string().required('이메일을 입력해주세요').email('올바른 이메일 형식이 아닙니다'),
 });
 
@@ -66,7 +66,7 @@ const MyInfoEdit = () => {
     setError(null);
     try {
       const response = await apiClient.put('/api/users/me', {
-        userId,
+        userId : userId,
         nickname: data.nickname,
         email: data.email,
       });

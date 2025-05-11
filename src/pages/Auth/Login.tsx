@@ -38,12 +38,11 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      const response = await apiClient.post('/api/users/login', {
+      await apiClient.post('/api/users/login', {
         userId: data.id,
         password: data.password
       });
-
-      login(response.data.token, data.id);
+      login(data.id);
     } catch (error) {
       setError('로그인에 실패했습니다. ID와 비밀번호를 확인해주세요.');
       console.error('로그인 실패:', error);

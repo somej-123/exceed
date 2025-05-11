@@ -70,18 +70,19 @@ const Header = () => {
             >채팅</Nav.Link>
             {isAuthenticated ? (
               <>
-              <Nav.Link 
-                onClick={handleLogout}
-                className="me-4"
-                href="#"
-                data-text="로그아웃"
-              >로그아웃</Nav.Link>
+
               <Nav.Link 
               as={Link} 
               className={`me-4 ${isActive('/myinfo')}`} 
               to="/myinfo"
               data-text="내정보"
             >내정보</Nav.Link>
+            <Nav.Link 
+                onClick={handleLogout}
+                className="me-4"
+                href="#"
+                data-text="로그아웃"
+              >로그아웃</Nav.Link>
             </>
             ) : (
               <Nav.Link 
