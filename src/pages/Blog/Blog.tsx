@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Badge, Spinner, Button, Form, InputGroup } from 'react-bootstrap';
+import { FaCog, FaEdit, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 // mock 카테고리 목록
@@ -129,18 +130,18 @@ const Blog = () => {
   }
 
   return (
-    <Container>
-      <Row className="mb-5">
+    <Container className="py-5 blog-dark-theme">
+      <Row className="mb-5 text-center">
         <Col>
-          <h1 className="text-center">블로그</h1>
-          <p className="text-center">Exceed의 다양한 이야기를 만나보세요.</p>
+          <h1 className="fw-bold display-5 page-title">블로그</h1>
+          <p className="lead page-subtitle">Exceed의 다양한 이야기를 만나보세요.</p>
         </Col>
       </Row>
-      <Row className="mb-5">
-        <Col md={8} className="mb-2 mb-md-0">
+      <Row className="mb-4 align-items-center">
+        <Col md={7} lg={8} className="mb-3 mb-md-0">
           <InputGroup>
             <Form.Select
-              style={{ maxWidth: 160 }}
+              className="form-control-dark category-select"
               value={category}
               onChange={e => setCategory(e.target.value)}
             >
@@ -154,48 +155,195 @@ const Blog = () => {
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              className="form-control-dark search-input"
             />
-            <Button variant="primary" onClick={handleSearch}>검색</Button>
+            <Button onClick={handleSearch} className="btn-submit-dark search-button">
+              <FaSearch />
+            </Button>
           </InputGroup>
         </Col>
-        <Col md={4} className="text-md-end text-center">
-          <Button variant="primary" onClick={() => navigate('/blog/write')}>글 작성</Button>
+        <Col md={5} lg={4} className="text-md-end text-center">
+          <Button onClick={() => navigate('/blog/write')} className="btn-submit-dark me-2">
+             글 작성 <FaEdit />
+          </Button>
+          <Button onClick={() => navigate('/blog/setting')} className="btn-secondary-dark">
+             설정 <FaCog />
+          </Button>
         </Col>
       </Row>
-      <Row>
+      <Row xs={1} md={2} lg={3} className="g-4">
         {filteredPosts.map(post => (
-          <Col md={4} key={post.blog_post_id} className="mb-4">
-            <Card>
-              {post.thumbnail_url && (
-                <Card.Img variant="top" src={post.thumbnail_url} alt={post.title} style={{ height: 180, objectFit: 'cover' }} />
+          <Col key={post.blog_post_id}>
+            <Card className="h-100 shadow border-0 rounded-4 overflow-hidden blog-card-dark">
+              {post.thumbnail_url ? (
+                <Card.Img variant="top" src={post.thumbnail_url} alt={post.title} className="blog-card-img"/>
+              ) : (
+                 <div className="card-img-top blog-card-img-placeholder"></div>
               )}
-              <Card.Body>
-                <Card.Title>{post.title}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted" style={{ fontSize: '0.95rem' }}>
+              <Card.Body className="d-flex flex-column">
+                <Card.Title className="fw-bold h5 mb-2 card-title-dark">{post.title}</Card.Title>
+                <Card.Subtitle className="mb-2 card-subtitle-dark">
                   {post.created_at} | {post.blog_category?.name}
                 </Card.Subtitle>
                 <div className="mb-2">
                   {post.tags && post.tags.map((tag: any) => (
-                    <Badge bg="secondary" key={tag.name} className="me-1">#{tag.name}</Badge>
+                    <Badge key={tag.name} className="me-1 tag-badge-dark">#{tag.name}</Badge>
                   ))}
                 </div>
-                <Card.Text style={{ minHeight: 60 }}>
+                <Card.Text className="card-text-dark flex-grow-1">
                   {post.summary}
                 </Card.Text>
-                <div className="mb-2" style={{ fontSize: '0.9rem', color: '#888' }}>
+                <div className="mb-2 card-meta-dark">
                   작성자: {post.author?.nickname}
                 </div>
-                <div className="mb-2" style={{ fontSize: '0.9rem', color: '#888' }}>
+                <div className="mb-3 card-meta-dark">
                   조회수 {post.view_count} · 좋아요 {post.like_count} · 댓글 {post.comment_count}
                 </div>
-                <Button variant="link" href={`/blog/${post.slug}`} className="text-decoration-none p-0">자세히 보기 →</Button>
+                <a href={`/blog/${post.slug}`} className="btn-link-dark text-decoration-none p-0 mt-auto align-self-start">
+                  자세히 보기 →
+                </a>
               </Card.Body>
             </Card>
           </Col>
         ))}
+        {filteredPosts.length === 0 && !loading && (
+          <Col xs={12} className="text-center py-5">
+            <p className="text-muted fs-5">표시할 게시글이 없습니다.</p>
+          </Col>
+        )}
       </Row>
+
+       <style>{`
+         .blog-dark-theme {
+           /* Base styles for the page if needed */
+         }
+         .page-title {
+           color: #e9ecef; /* Light title color */
+         }
+          .page-subtitle {
+           color: #adb5bd; /* Lighter subtitle color */
+         }
+
+         /* Form Controls Dark */
+         .form-control-dark, .form-control-dark:focus {
+            background-color: #2a2d3a !important;
+            color: #f1f1f1 !important;
+            border: 1px solid #454954 !important;
+            box-shadow: none !important; /* Remove default focus shadow */
+         }
+         .form-control-dark::placeholder {
+           color: #6c757d !important;
+           opacity: 0.8;
+         }
+         .category-select {
+           max-width: 150px; /* Adjust width */
+           border-top-right-radius: 0 !important;
+           border-bottom-right-radius: 0 !important;
+         }
+         .search-input {
+           border-radius: 0 !important;
+           border-left: none !important;
+           border-right: none !important;
+         }
+         .search-button {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            padding: 0.375rem 0.9rem !important; /* Adjust padding to align height */
+         }
+         .search-button svg {
+             vertical-align: middle;
+         }
+
+          /* Button Styles (copied from previous examples) */
+          .btn-secondary-dark {
+            color: #adb5bd !important;
+            background-color: #343a40 !important; /* Slightly darker secondary */
+            border-color: #495057 !important;
+            border-radius: 0.375rem !important;
+            font-weight: 500 !important;
+            padding: 0.5rem 1rem; /* Consistent padding */
+            transition: all 0.2s ease-in-out;
+            display: inline-flex; /* Align icon and text */
+            align-items: center;
+            gap: 0.4rem; /* Space between icon and text */
+          }
+          .btn-secondary-dark:hover {
+            background-color: #495057 !important;
+            border-color: #495057 !important;
+            color: #f1f1f1 !important;
+            transform: translateY(-1px);
+          }
+          .btn-submit-dark {
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%) !important;
+            border: none !important;
+            border-radius: 0.375rem !important;
+            transition: all 0.3s ease !important;
+            font-weight: 500 !important; /* Adjusted weight slightly */
+            color: #fff !important;
+            padding: 0.5rem 1rem; /* Consistent padding */
+            display: inline-flex; /* Align icon and text */
+            align-items: center;
+            gap: 0.4rem; /* Space between icon and text */
+          }
+          .btn-submit-dark:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 10px rgba(143, 148, 251, 0.25) !important;
+          }
+          .btn-link-dark {
+             color: #a8c7ff !important; /* Light blue link color */
+             font-weight: 500;
+          }
+           .btn-link-dark:hover {
+             color: #c0d8ff !important; /* Lighter blue on hover */
+             text-decoration: underline !important;
+           }
+
+          /* Card Styles */
+          .blog-card-dark {
+            background-color: #1e2028 !important; /* Darker card background */
+            color: #f1f1f1 !important;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+          }
+          .blog-card-dark:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
+          }
+          .card-title-dark {
+             color: #e9ecef !important;
+          }
+           .card-subtitle-dark {
+             color: #868e96 !important; /* Subdued subtitle */
+             font-size: 0.85rem;
+           }
+           .card-text-dark {
+              color: #adb5bd !important; /* Lighter text */
+              font-size: 0.95rem;
+              min-height: 65px; /* Ensure consistent height */
+           }
+            .card-meta-dark {
+              font-size: 0.8rem !important;
+              color: #6c757d !important;
+            }
+           .blog-card-img {
+             height: 200px; /* Consistent image height */
+             object-fit: cover;
+           }
+            .blog-card-img-placeholder {
+              height: 200px;
+              background-color: #2a2d3a; /* Placeholder background */
+            }
+
+           /* Badge Styles */
+           .tag-badge-dark {
+              background-color: #35365a !important; /* Darker badge */
+              color: #e0e0ff !important; /* Light text on badge */
+              font-weight: 500;
+              font-size: 0.75rem;
+              padding: 0.3em 0.6em;
+           }
+       `}</style>
     </Container>
   );
 };
 
-export default Blog; 
+export default Blog;

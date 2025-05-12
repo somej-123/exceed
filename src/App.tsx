@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useAuthStore } from './store/authStore';
 import Layout from './components/Layout';
 import Home from './pages/Home/Home';
 import Info from './pages/Info/Info';
@@ -11,11 +13,18 @@ import ForgotPassword from './pages/Auth/ForgotPassword';
 import MyInfo from './pages/MyInfo/MyInfo';
 import MyInfoEdit from './pages/MyInfo/MyInfoEdit';
 import MyInfoChangePassword from './pages/MyInfo/MyInfoChangePassword';
+import BlogCategoryList from './pages/Blog/BlogCategoryList';
+import BlogCategoryEdit from './pages/Blog/BlogCategoryEdit';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { PrivateRoute } from './components/PrivateRoute';
 import { PublicRoute } from './components/PublicRoute';
+import BlogSetting from './pages/Blog/BlogSetting';
 
 function App() {
+  useEffect(() => {
+    useAuthStore.getState().checkAuth();
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -23,8 +32,6 @@ function App() {
           <Route index element={<Home />} />
           <Route path="info" element={<Info />} />
           <Route path="blog" element={<Blog />} />
-          <Route path="blog/write" element={<BlogAddEdit />} />
-          <Route path="blog/edit/:id" element={<BlogAddEdit />} />
           <Route path="chat" element={
             <PrivateRoute>
               <Chat />
@@ -58,6 +65,26 @@ function App() {
           <Route path="myinfo/password" element={
             <PrivateRoute>
               <MyInfoChangePassword />
+            </PrivateRoute>
+          } />
+          <Route path="blog/write" element={
+            <PrivateRoute>
+              <BlogAddEdit />
+            </PrivateRoute>
+          } />
+          <Route path="blog/setting" element={
+            <PrivateRoute>
+              <BlogSetting />
+            </PrivateRoute>
+          } />
+          <Route path="blog/setting/category" element={
+            <PrivateRoute>
+              <BlogCategoryList />
+            </PrivateRoute>
+          } />
+          <Route path="blog/setting/category/edit" element={
+            <PrivateRoute>
+              <BlogCategoryEdit />
             </PrivateRoute>
           } />
         </Route>

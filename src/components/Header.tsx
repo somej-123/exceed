@@ -79,7 +79,7 @@ const Header = () => {
             >내정보</Nav.Link>
             <Nav.Link 
                 onClick={handleLogout}
-                className="me-4"
+                className={`me-4 ${isActive('/logout')}`}
                 href="#"
                 data-text="로그아웃"
               >로그아웃</Nav.Link>

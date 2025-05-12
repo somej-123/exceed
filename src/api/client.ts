@@ -16,10 +16,13 @@ export const apiClient = axios.create({
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      window.location.href = '/login';
-      return Promise.reject(error);
-    }
+    // 401/403 에러 시 강제 리다이렉트 제거 (무한 새로고침 방지)
+    // 로그인 상태 변경은 Zustand 스토어와 라우팅 컴포넌트가 처리
+    // if (error.response?.status === 401 || error.response?.status === 403) {
+    //   window.location.href = '/login'; // 이 코드가 무한 루프를 유발하므로 제거
+    // }
+
+    // 처리되지 않은 에러는 그대로 반환
     return Promise.reject(error);
   }
 );
