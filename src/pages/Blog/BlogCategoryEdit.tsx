@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { apiClient } from 'src/api/client';
 import { showError, showSuccess } from 'src/utils/swal';
 // import apiClient from '../../api/apiClient'; // 실제 API 클라이언트 import 필요
 
@@ -23,12 +24,17 @@ const BlogCategoryEdit = () => {
 
     try {
       // 실제 API 호출 (POST 요청)
-      // const response = await apiClient.post('/api/blog/categories', { name, description });
+      const response = await apiClient.post('/api/blog/categories', { name, description });
       console.log('API 호출 시뮬레이션:', { name, description }); // 시뮬레이션 로그
 
-      showSuccess('성공', '카테고리가 성공적으로 생성되었습니다.');
-        
-      
+      console.log("response", response);
+
+      if (response.status === 200) {
+        showSuccess('성공', '카테고리가 성공적으로 생성되었습니다.');
+        navigate('/blog/setting/category'); // 카테고리 목록 페이지로 이동
+      } else {
+        showError('오류', '카테고리 생성 중 오류가 발생했습니다.');
+      } 
     //   navigate('/blog/setting/category'); // 카테고리 목록 페이지로 이동
 
     } catch (error) {
@@ -54,6 +60,7 @@ const BlogCategoryEdit = () => {
                   <Form.Control
                     type="text"
                     placeholder="예: 기술, 일상"
+                    autoComplete='off'
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required

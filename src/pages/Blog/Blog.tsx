@@ -248,6 +248,8 @@ const Blog = () => {
          .search-button {
             border-top-left-radius: 0 !important;
             border-bottom-left-radius: 0 !important;
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
             padding: 0.375rem 0.9rem !important; /* Adjust padding to align height */
          }
          .search-button svg {

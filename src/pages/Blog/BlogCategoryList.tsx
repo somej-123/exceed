@@ -1,52 +1,42 @@
-import { Container, Row, Col, Table, Button, Badge, Card, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Container, Row, Col, Table, Button, Badge, Card, Tooltip, OverlayTrigger, Form } from 'react-bootstrap';
 import { FaEdit, FaTrashAlt, FaPlus } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-// 실제로는 API에서 받아올 카테고리 목록 데이터 (mock)
-const mockCategoriesData = [
-  {
-    blog_category_id: 1,
-    name: '기술',
-    description: '개발, IT, 프로그래밍 관련 글',
-    post_count: 15,
-  },
-  {
-    blog_category_id: 2,
-    name: '고객사례',
-    description: 'Exceed 솔루션 도입 성공 사례',
-    post_count: 8,
-  },
-  {
-    blog_category_id: 3,
-    name: '문화',
-    description: 'Exceed의 조직 문화, 이야기',
-    post_count: 5,
-  },
-];
+import { apiClient } from 'src/api/client';
+import CommonTable from 'src/components/CommonTable';
+import CommonPaging from 'src/components/CommonPaging';
 
 const BlogCategoryList = () => {
-  const [categories, setCategories] = useState(mockCategoriesData);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
 
   // 실제 API 호출 예시 (주석 처리)
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       setLoading(true);
-  //       // const response = await apiClient.get('/api/blog/categories');
-  //       // setCategories(response.data);
-  //       setCategories(mockCategoriesData); // 임시 목업 사용
-  //     } catch (error) {
-  //       console.error("Error fetching categories:", error);
-  //       // 에러 처리 (e.g., swal)
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchCategories();
-  // }, []);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const params: any = {
+          page: currentPage,
+          size: itemsPerPage,
+        };
+        if (searchTerm) params.search = searchTerm;
+        const response = await apiClient.get('/api/blog/categories', { params });
+        setCategories(response.data.categories || response.data.content || response.data); // 서버 구조에 따라 조정
+        setTotalPages(response.data.totalPages || response.data.lastPage || 1); // 서버 구조에 따라 조정
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        // 에러 처리 (e.g., swal)
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, [currentPage, itemsPerPage, searchTerm]);
 
   // 임시 로딩 효과
   useEffect(() => {
@@ -77,13 +67,83 @@ const BlogCategoryList = () => {
     </Tooltip>
   );
 
+  const columns = [
+    { key: 'id', label: 'ID' },
+    { key: 'name', label: '이름', className: 'text-start' },
+    { key: 'description', label: '설명', className: 'text-start' },
+    { key: 'post_count', label: '글 수' },
+    { key: 'actions', label: '관리' },
+  ];
+
+  const renderRow = (category: any) => (
+    <tr key={category.blogCategoryId} className="category-row">
+      <td>{category.blogCategoryId}</td>
+      <td className="text-start fw-medium">{category.name}</td>
+      <td className="text-start text-muted small">{category.description}</td>
+      <td>
+        <Badge pill bg="dark" className="px-2 py-1 category-badge">{category.post_count}</Badge>
+      </td>
+      <td>
+        <OverlayTrigger
+          placement="top"
+          delay={{ show: 250, hide: 400 }}
+          overlay={(props) => renderTooltip(props, '수정')}
+        >
+          <Button
+            variant="link"
+            className="p-1 me-1 action-icon edit-icon"
+            onClick={() => handleEdit(category.blog_category_id)}
+          >
+            <FaEdit size={18} />
+          </Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          placement="top"
+          delay={{ show: 250, hide: 400 }}
+          overlay={(props) => renderTooltip(props, '삭제')}
+        >
+          <Button
+            variant="link"
+            className="p-1 action-icon delete-icon"
+            onClick={() => handleDelete(category.blog_category_id)}
+          >
+            <FaTrashAlt size={17} />
+          </Button>
+        </OverlayTrigger>
+      </td>
+    </tr>
+  );
+
   return (
     <Container className="py-5">
-      <Row className="mb-4 align-items-center">
-        <Col>
-          <h2 className="fw-bold display-6 category-title">카테고리 관리</h2>
+      <Row className="mb-3 align-items-end">
+        <Col md={4} className="mb-2 mb-md-0">
+          <Form.Control
+            type="text"
+            placeholder="카테고리 검색"
+            value={searchTerm}
+            onChange={e => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="category-search-input"
+          />
         </Col>
-        <Col xs="auto">
+        <Col md={2} className="mb-2 mb-md-0">
+          <Form.Select
+            value={itemsPerPage}
+            onChange={e => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            className="category-select-dark"
+          >
+            {[10, 20, 50].map(num => (
+              <option key={num} value={num}>{num}개씩 보기</option>
+            ))}
+          </Form.Select>
+        </Col>
+        <Col className="text-end">
           <Button variant="primary" onClick={handleAdd} className="add-category-btn shadow">
             <FaPlus className="me-2" /> 카테고리 추가
           </Button>
@@ -93,69 +153,27 @@ const BlogCategoryList = () => {
         <Col>
           <Card className="shadow-lg rounded-4 border-0 overflow-hidden card-dark-theme">
             <Card.Body className="p-0">
-              <Table hover responsive className="text-center align-middle mb-0 category-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th className="text-start">이름</th>
-                    <th className="text-start">설명</th>
-                    <th>글 수</th>
-                    <th>관리</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr className="category-row">
-                      <td colSpan={5} className="text-muted py-5">로딩 중...</td>
-                    </tr>
-                  ) : categories.length === 0 ? (
-                    <tr className="category-row">
-                      <td colSpan={5} className="text-muted py-5 fs-5">등록된 카테고리가 없습니다.</td>
-                    </tr>
-                  ) : (
-                    categories.map(category => (
-                      <tr key={category.blog_category_id} className="category-row">
-                        <td>{category.blog_category_id}</td>
-                        <td className="text-start fw-medium">{category.name}</td>
-                        <td className="text-start text-muted small">{category.description}</td>
-                        <td>
-                          <Badge pill bg="dark" className="px-2 py-1 category-badge">{category.post_count}</Badge>
-                        </td>
-                        <td>
-                          <OverlayTrigger
-                            placement="top"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={(props) => renderTooltip(props, '수정')}
-                          >
-                            <Button
-                              variant="link"
-                              className="p-1 me-1 action-icon edit-icon"
-                              onClick={() => handleEdit(category.blog_category_id)}
-                            >
-                              <FaEdit size={18} />
-                            </Button>
-                          </OverlayTrigger>
-                          <OverlayTrigger
-                            placement="top"
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={(props) => renderTooltip(props, '삭제')}
-                          >
-                            <Button
-                              variant="link"
-                              className="p-1 action-icon delete-icon"
-                              onClick={() => handleDelete(category.blog_category_id)}
-                            >
-                              <FaTrashAlt size={17} />
-                            </Button>
-                          </OverlayTrigger>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </Table>
+              <CommonTable
+                columns={columns}
+                data={categories}
+                loading={loading}
+                emptyMessage="등록된 카테고리가 없습니다."
+                renderRow={renderRow}
+                className="text-center align-middle mb-0 category-table"
+              />
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col>
+          <CommonPaging
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            className="category-pagination-dark"
+            pageLinkClassName="page-link-dark"
+          />
         </Col>
       </Row>
 
@@ -257,6 +275,66 @@ const BlogCategoryList = () => {
           }
           .tooltip .tooltip-arrow::before {
             border-top-color: #222;
+          }
+          .category-search-input {
+            background: #23242a !important;
+            color: #f1f1f1 !important;
+            border: 1.5px solid #35365a !important;
+            border-radius: 12px !important;
+            font-size: 1.05rem;
+            padding: 12px 14px;
+            box-shadow: 0 2px 8px rgba(20,20,30,0.13);
+            transition: border-color 0.2s;
+          }
+          .category-search-input:focus {
+            border-color: #7c5fe6 !important;
+            outline: none;
+            box-shadow: 0 0 0 2px #7c5fe655;
+          }
+          .category-search-input::placeholder {
+            color: #fff !important;
+            opacity: 1 !important;
+          }
+          .category-select-dark {
+            background: #23242a !important;
+            color: #f1f1f1 !important;
+            border: 1.5px solid #35365a !important;
+            border-radius: 12px !important;
+            font-size: 1.05rem;
+            padding: 12px 14px;
+            box-shadow: 0 2px 8px rgba(20,20,30,0.13);
+            transition: border-color 0.2s;
+          }
+          .category-select-dark:focus {
+            border-color: #7c5fe6 !important;
+            outline: none;
+            box-shadow: 0 0 0 2px #7c5fe655;
+          }
+          .category-pagination-dark .page-link-dark {
+            background: #23242a !important;
+            color: #f1f1f1 !important;
+            border: 1.5px solid #35365a !important;
+            border-radius: 8px !important;
+            margin: 0 2px;
+            min-width: 36px;
+            min-height: 36px;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(20,20,30,0.13);
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+          }
+          .category-pagination-dark .page-link-dark.active,
+          .category-pagination-dark .page-link-dark:focus {
+            background: linear-gradient(90deg,#4e54c8,#8f94fb) !important;
+            color: #fff !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: 0 0 0 2px #7c5fe655;
+          }
+          .category-pagination-dark .page-link-dark:hover {
+            background: #35365a !important;
+            color: #fff !important;
+            border-color: #7c5fe6 !important;
           }
         `}
       </style>
