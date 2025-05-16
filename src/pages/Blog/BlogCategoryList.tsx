@@ -1,10 +1,11 @@
-import { Container, Row, Col, Table, Button, Badge, Card, Tooltip, OverlayTrigger, Form } from 'react-bootstrap';
+import { Container, Row, Col, Table, Button, Badge, Card, Tooltip, OverlayTrigger, Form, InputGroup } from 'react-bootstrap';
 import { FaEdit, FaTrashAlt, FaPlus } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from 'src/api/client';
 import CommonTable from 'src/components/CommonTable';
 import CommonPaging from 'src/components/CommonPaging';
+import { showConfirm, showSuccess } from 'src/utils/swal';
 
 const BlogCategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -16,27 +17,28 @@ const BlogCategoryList = () => {
   const navigate = useNavigate();
 
   // 실제 API 호출 예시 (주석 처리)
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const params: any = {
+        page: currentPage,
+        size: itemsPerPage,
+      };
+      if (searchTerm) params.search = searchTerm;
+      const response = await apiClient.get('/api/blog/categories', { params });
+      setCategories(response.data.categories || response.data.content || response.data); // 서버 구조에 따라 조정
+      setTotalPages(response.data.totalPages || response.data.lastPage || 1); // 서버 구조에 따라 조정
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      // 에러 처리 (e.g., swal)
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const params: any = {
-          page: currentPage,
-          size: itemsPerPage,
-        };
-        if (searchTerm) params.search = searchTerm;
-        const response = await apiClient.get('/api/blog/categories', { params });
-        setCategories(response.data.categories || response.data.content || response.data); // 서버 구조에 따라 조정
-        setTotalPages(response.data.totalPages || response.data.lastPage || 1); // 서버 구조에 따라 조정
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        // 에러 처리 (e.g., swal)
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCategories();
-  }, [currentPage, itemsPerPage, searchTerm]);
+  }, [currentPage, itemsPerPage]);
 
   // 임시 로딩 효과
   useEffect(() => {
@@ -45,19 +47,26 @@ const BlogCategoryList = () => {
 
   // TODO: 카테고리 수정/삭제/추가 로직 구현
   const handleEdit = (categoryId: number) => {
-    console.log('Edit category:', categoryId);
     // 수정 모달 또는 페이지 이동 로직
+    navigate(`/blog/setting/category/${categoryId}`);
   };
 
   const handleDelete = (categoryId: number) => {
-    console.log('Delete category:', categoryId);
     // 삭제 확인 모달 후 API 호출 로직
+    showConfirm('삭제', '삭제하시겠습니까?').then((result) => {
+      if (result.isConfirmed) {
+        apiClient.delete(`/api/blog/categories/${categoryId}`).then(() => {
+          showSuccess('삭제', '삭제되었습니다.');
+          fetchCategories();
+        });
+      }
+    });
   };
 
   const handleAdd = () => {
     console.log('Add new category');
     // 추가 모달 또는 페이지 이동 로직
-    navigate('/blog/setting/category/edit');
+    navigate('/blog/setting/category/add');
   };
 
   // 툴팁 렌더 함수
@@ -81,7 +90,7 @@ const BlogCategoryList = () => {
       <td className="text-start fw-medium">{category.name}</td>
       <td className="text-start text-muted small">{category.description}</td>
       <td>
-        <Badge pill bg="dark" className="px-2 py-1 category-badge">{category.post_count}</Badge>
+        <Badge pill bg="dark" className="px-2 py-1 category-badge">{category.postCount}</Badge>
       </td>
       <td>
         <OverlayTrigger
@@ -92,7 +101,7 @@ const BlogCategoryList = () => {
           <Button
             variant="link"
             className="p-1 me-1 action-icon edit-icon"
-            onClick={() => handleEdit(category.blog_category_id)}
+            onClick={() => handleEdit(category.blogCategoryId)}
           >
             <FaEdit size={18} />
           </Button>
@@ -105,7 +114,7 @@ const BlogCategoryList = () => {
           <Button
             variant="link"
             className="p-1 action-icon delete-icon"
-            onClick={() => handleDelete(category.blog_category_id)}
+            onClick={() => handleDelete(category.blogCategoryId)}
           >
             <FaTrashAlt size={17} />
           </Button>
@@ -118,16 +127,27 @@ const BlogCategoryList = () => {
     <Container className="py-5">
       <Row className="mb-3 align-items-end">
         <Col md={4} className="mb-2 mb-md-0">
-          <Form.Control
-            type="text"
-            placeholder="카테고리 검색"
-            value={searchTerm}
-            onChange={e => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="category-search-input"
-          />
+          <InputGroup>
+            <Form.Control
+              type="text"
+              style={{ borderRadius: 0 }}
+              placeholder="카테고리 검색"
+              value={searchTerm}
+              onChange={e => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="category-search-input"
+            />
+            <Button
+              variant="primary"
+              onClick={fetchCategories}
+              className="add-category-btn search-button"
+              style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, marginLeft: '-1px' }}
+            >
+              검색
+            </Button>
+          </InputGroup>
         </Col>
         <Col md={2} className="mb-2 mb-md-0">
           <Form.Select
@@ -280,7 +300,7 @@ const BlogCategoryList = () => {
             background: #23242a !important;
             color: #f1f1f1 !important;
             border: 1.5px solid #35365a !important;
-            border-radius: 12px !important;
+            border-radius: 0 !important;
             font-size: 1.05rem;
             padding: 12px 14px;
             box-shadow: 0 2px 8px rgba(20,20,30,0.13);

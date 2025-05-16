@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from 'src/api/client';
 import { showError, showSuccess } from 'src/utils/swal';
 // import apiClient from '../../api/apiClient'; // 실제 API 클라이언트 import 필요
 
 const BlogCategoryEdit = () => {
+  const { id } = useParams();
+  console.log("id", id);
+
+  // id가 있으면 수정, 없으면 신규
+  const isEdit = Boolean(id);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,9 +30,6 @@ const BlogCategoryEdit = () => {
     try {
       // 실제 API 호출 (POST 요청)
       const response = await apiClient.post('/api/blog/categories', { name, description });
-      console.log('API 호출 시뮬레이션:', { name, description }); // 시뮬레이션 로그
-
-      console.log("response", response);
 
       if (response.status === 200) {
         showSuccess('성공', '카테고리가 성공적으로 생성되었습니다.');
@@ -45,13 +47,23 @@ const BlogCategoryEdit = () => {
     }
   };
 
+  useEffect(() => {
+    if (isEdit) {
+      apiClient.get(`/api/blog/categories/${id}`).then((response) => {
+        console.log("response", response);
+        setName(response.data.name);
+        setDescription(response.data.description);
+      });
+    }
+  }, [id]);
+
   return (
     <Container className="py-5">
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <Card className="shadow-lg border-0 rounded-4 overflow-hidden card-dark-theme">
             <Card.Header className="border-bottom-dark py-3 px-4">
-              <h3 className="mb-0 fw-bold">새 카테고리 생성</h3>
+              <h3 className="mb-0 fw-bold">{isEdit ? '카테고리 수정' : '카테고리 생성'}</h3>
             </Card.Header>
             <Card.Body className="p-4">
               <Form onSubmit={handleSubmit}>
@@ -86,7 +98,7 @@ const BlogCategoryEdit = () => {
                    <Button
                      variant="outline-secondary"
                      type="button"
-                     onClick={() => navigate('/blog/categories')}
+                     onClick={() => navigate('/blog/setting/category')}
                      disabled={isSubmitting}
                      className="btn-cancel-dark"
                    >

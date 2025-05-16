@@ -25,6 +25,24 @@ function App() {
     useAuthStore.getState().checkAuth();
   }, []);
 
+  const privateRoutes = [
+    { path: 'chat', element: <Chat /> },
+    { path: 'myinfo', element: <MyInfo /> },
+    { path: 'myinfo/edit', element: <MyInfoEdit /> },
+    { path: 'myinfo/password', element: <MyInfoChangePassword /> },
+    { path: 'blog/write', element: <BlogAddEdit /> },
+    { path: 'blog/setting', element: <BlogSetting /> },
+    { path: 'blog/setting/category', element: <BlogCategoryList /> },
+    { path: 'blog/setting/category/add', element: <BlogCategoryEdit /> },
+    { path: 'blog/setting/category/:id', element: <BlogCategoryEdit /> },
+  ];
+
+  const publicRoutes = [
+    { path: 'login', element: <Login /> },
+    { path: 'register', element: <Register /> },
+    { path: 'forgot-password', element: <ForgotPassword /> },
+  ];
+
   return (
     <Router>
       <Routes>
@@ -32,61 +50,24 @@ function App() {
           <Route index element={<Home />} />
           <Route path="info" element={<Info />} />
           <Route path="blog" element={<Blog />} />
-          <Route path="chat" element={
-            <PrivateRoute>
-              <Chat />
-            </PrivateRoute>
-          } />
-          <Route path="login" element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          } />
-          <Route path="register" element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          } />
-          <Route path="forgot-password" element={
-            <PublicRoute>
-              <ForgotPassword />
-            </PublicRoute>
-          } />
-          <Route path="myinfo" element={
-            <PrivateRoute>
-              <MyInfo />
-            </PrivateRoute>
-          } />
-          <Route path="myinfo/edit" element={
-            <PrivateRoute>
-              <MyInfoEdit />
-            </PrivateRoute>
-          } />
-          <Route path="myinfo/password" element={
-            <PrivateRoute>
-              <MyInfoChangePassword />
-            </PrivateRoute>
-          } />
-          <Route path="blog/write" element={
-            <PrivateRoute>
-              <BlogAddEdit />
-            </PrivateRoute>
-          } />
-          <Route path="blog/setting" element={
-            <PrivateRoute>
-              <BlogSetting />
-            </PrivateRoute>
-          } />
-          <Route path="blog/setting/category" element={
-            <PrivateRoute>
-              <BlogCategoryList />
-            </PrivateRoute>
-          } />
-          <Route path="blog/setting/category/edit" element={
-            <PrivateRoute>
-              <BlogCategoryEdit />
-            </PrivateRoute>
-          } />
+
+          {/* Private Routes */}
+          {privateRoutes.map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={<PrivateRoute>{element}</PrivateRoute>}
+            />
+          ))}
+
+          {/* Public Routes */}
+          {publicRoutes.map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={<PublicRoute>{element}</PublicRoute>}
+            />
+          ))}
         </Route>
       </Routes>
     </Router>

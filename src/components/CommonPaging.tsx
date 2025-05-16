@@ -19,8 +19,8 @@ const CommonPaging: React.FC<CommonPagingProps> = ({
   if (totalPages <= 1) return null;
   return (
     <nav>
-      <ul className={`pagination justify-content-center ${className}`}>
-        <li className={`page-item${currentPage === 1 ? ' disabled' : ''}`}>
+      <ul className={`pagination justify-content-center ${className}`} style={{ marginBottom: 0 }}>
+        <li className={`page-item${currentPage === 1 ? ' disabled' : ''}`} style={{ margin: '0 4px' }}>
           <Button
             className={`page-link ${pageLinkClassName}`}
             onClick={() => onPageChange(currentPage - 1)}
@@ -32,7 +32,7 @@ const CommonPaging: React.FC<CommonPagingProps> = ({
           </Button>
         </li>
         {Array.from({ length: totalPages }, (_, i) => (
-          <li key={i + 1} className={`page-item${currentPage === i + 1 ? ' active' : ''}`}>
+          <li key={i + 1} className={`page-item${currentPage === i + 1 ? ' active' : ''}`} style={{ margin: '0 4px' }}>
             <Button
               className={`page-link ${pageLinkClassName}${currentPage === i + 1 ? ' active' : ''}`}
               onClick={() => onPageChange(i + 1)}
@@ -44,7 +44,7 @@ const CommonPaging: React.FC<CommonPagingProps> = ({
             </Button>
           </li>
         ))}
-        <li className={`page-item${currentPage === totalPages ? ' disabled' : ''}`}>
+        <li className={`page-item${currentPage === totalPages ? ' disabled' : ''}`} style={{ margin: '0 4px' }}>
           <Button
             className={`page-link ${pageLinkClassName}`}
             onClick={() => onPageChange(currentPage + 1)}
